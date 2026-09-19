@@ -35,7 +35,10 @@ jobs:
       # 3. Verify Java version
       - name: Verify Java
         run: java -version
+		
+	  - name: Analyze with SonarCloud
+		run: mvn clean verify sonar:sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }}
 
       # 4. Build Spring Boot application
-      - name: Build Spring Boot application
-        run: mvn clean package -DskipTests
+#      - name: Build Spring Boot application
+#        run: mvn clean package -DskipTests

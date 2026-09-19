@@ -28,6 +28,11 @@
 	</scm>
 	<properties>
 		<java.version>17</java.version>
+		<jacoco.version>0.8.13</jacoco.version>
+		<sonar.projectKey>amitsingh6764_ecommerce-Service</sonar.projectKey>
+		<sonar.organization>amitsingh6764</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<sonar.java.binaries>target/classes</sonar.java.binaries>
 	</properties>
 	<dependencies>
         <!-- Spring Boot Web -->
@@ -78,6 +83,13 @@
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc11</artifactId>
         </dependency>
+        
+        <!-- Jacoco code covrage-->
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.13</version>
+        </dependency>
 
 		<!-- Tests -->
         <dependency>
@@ -96,6 +108,38 @@
                     <finalName>ecommerce-service</finalName>
                 </configuration>
 			</plugin>
+			<plugin>
+    <groupId>org.jacoco</groupId>
+    <artifactId>jacoco-maven-plugin</artifactId>
+    <version>0.8.13</version>
+
+    <executions>
+
+        <!-- Prepare JaCoCo agent -->
+        <execution>
+            <id>prepare-agent</id>
+            <goals>
+                <goal>prepare-agent</goal>
+            </goals>
+        </execution>
+
+        <!-- Generate JaCoCo report -->
+        <execution>
+            <id>report</id>
+            <phase>test</phase>
+            <goals>
+                <goal>report</goal>
+            </goals>
+        </execution>
+
+    </executions>
+</plugin>
+<plugin>
+    <groupId>org.sonarsource.scanner.maven</groupId>
+    <artifactId>sonar-maven-plugin</artifactId>
+    <version>5.4.0.6356</version>
+</plugin>
+			
 		</plugins>
 	</build>
 
