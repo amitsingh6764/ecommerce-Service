@@ -36,6 +36,53 @@ jobs:
       - name: Verify Java
         run: java -version
 
-      # 4. Build, Test, JaCoCo and SonarCloud
-      - name: Analyze with SonarCloud
-        run: mvn clean verify sonar:sonar -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+      # 4. Start Oracle Database
+      - name: Start Oracle Database
+        run: |
+          docker run -d \
+            --name oracle-db \
+            -p 1521:1521 \
+            -e ORACLE_PASSWORD=NewPass123 \
+            -e APP_USER=MYAPP \
+            -e APP_USER_PASSWORD=NewPass123 \
+            gvenzl/oracle-free:23-slim
+
+      # 5. Wait for Oracle Database
+      - name: Wait for Oracle Database
+        run: |
+          echo "Waiting for Oracle Database..."
+
+          for i in {1..30}; do
+
+            if docker exec oracle-db healthcheck.sh >/dev/null 2>&1; then
+              echo "Oracle Database is ready!"
+              exit 0
+            fi
+
+            echo "Oracle is not ready yet..."
+            sleep 10
+
+          done
+
+          echo "Oracle Database failed to start"
+
+          docker logs oracle-db
+
+          exit 1
+
+      # 6. Check Oracle Database
+      - name: Check Oracle Database
+        run: |
+          docker ps
+          docker logs oracle-db --tail 50
+
+      # 7. Build, Test, JaCoCo and SonarCloud
+      - name: Build and Analyze
+        env:
+          SPRING_DATASOURCE_URL: jdbc:oracle:thin:@//localhost:1521/FREEPDB1
+          SPRING_DATASOURCE_USERNAME: MYAPP
+          SPRING_DATASOURCE_PASSWORD: NewPass123
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          mvn clean verify sonar:sonar \
+            -Dsonar.token=$SONAR_TOKEN
