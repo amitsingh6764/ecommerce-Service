@@ -83,13 +83,6 @@
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc11</artifactId>
         </dependency>
-        
-        <!-- Jacoco code covrage-->
-        <dependency>
-            <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.8.13</version>
-        </dependency>
 
 		<!-- Tests -->
         <dependency>
